@@ -83,7 +83,7 @@ d-i debian-installer/allow_unauthenticated boolean false
 
 tasksel tasksel/first multiselect standard, ssh-server
 d-i pkgsel/upgrade select full-upgrade
-d-i pkgsel/include string sudo qemu-guest-agent
+d-i pkgsel/include string sudo qemu-guest-agent cloud-init
 popularity-contest popularity-contest/participate boolean false
 
 # 11. Boot loader installation
@@ -104,6 +104,7 @@ d-i cdrom-detect/eject boolean true
 
 %{ if ssh_public_key != null ~}
 d-i preseed/late_command string \
+  in-target /bin/sh -c 'echo "datasource_list: [ NoCloud, None ]" > /etc/cloud/cloud.cfg.d/01_ds-identify.cfg'; \
   in-target mkdir -p /home/${ username }/.ssh; \
   in-target /bin/sh -c 'echo "${ ssh_public_key }" >> /home/${ username }/.ssh/authorized_keys'; \
   in-target chmod -R 700 /home/${ username }/.ssh; \

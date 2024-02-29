@@ -1,0 +1,11 @@
+# misc
+tmp/
+
+# secrets
+*.key
+*.pem
+.env*
+
+# ide
+.vscode/
+.idea/

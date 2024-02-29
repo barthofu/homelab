@@ -28,12 +28,12 @@ source "proxmox-iso" "debian-12" {
     qemu_agent = true
     cores      = "1"
     sockets    = "1"
-    memory     = "512"
+    memory     = "1024"
 
     scsi_controller = "virtio-scsi-pci"
 
     disks {
-        disk_size = "50G"
+        disk_size = "10G"
         storage_pool = "local-lvm"
         type = "virtio"
     }
@@ -42,7 +42,7 @@ source "proxmox-iso" "debian-12" {
         model = "virtio"
         bridge = "vmbr0"
         firewall = "false"
-    } 
+    }
 
     cloud_init = true
     cloud_init_storage_pool = "local-lvm"

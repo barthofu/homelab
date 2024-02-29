@@ -51,14 +51,14 @@ Here is a list of services I want to run on my homelab:
 
 ## Tooling
 
-2. [Packer](https://www.packer.io/) to create the base VMs templates in Proxmox
-3. [Pulumi](https://www.pulumi.com/) to provision the infrastructure:
-   1. Proxmox VMs and CTs
-   2. Cloudflare
-   3. OCI
-   4. Tailscale
-   5. Amazon S3 Glacier / Blackblaze B2 / iDrive / Wasabi
+1. [Packer](https://www.packer.io/) to create the base VMs templates in Proxmox
+2. [Pulumi](https://www.pulumi.com/) to provision the infrastructure:
+   - Proxmox VMs and CTs
+   - Cloudflare
+   - OCI
+   - Tailscale
+3. Amazon S3 Glacier / Blackblaze B2 / iDrive / Wasabi
 4. [Ansible](https://www.ansible.com/) to configure the VMs and CTs post-provisioning
 5. [k3s](https://k3s.io/) cluster for running all my services (deployed with Ansible?)
-6. [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate/) to automate versions upgrades inside this repository
-7. [Flux](https://fluxcd.io/) to automate the deployment of the whole infrastructure using subsquent tools
+6.  [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate/) to automate versions upgrades inside this repository
+7.  [Flux](https://fluxcd.io/) to automate the deployment of the whole infrastructure using subsquent tools
