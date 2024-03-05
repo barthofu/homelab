@@ -8,6 +8,24 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+func CreateVms(
+	args *[]VmArgs,
+	ctx *pulumi.Context,
+	provider *proxmoxve.Provider,
+) ([]*vm.VirtualMachine, error) {
+
+	var vms []*vm.VirtualMachine
+	for _, arg := range *args {
+		vm, err := CreateVm(&arg, ctx, provider)
+		if err != nil {
+			return nil, err
+		}
+		vms = append(vms, vm)
+	}
+
+	return vms, nil
+}
+
 func CreateVm(
 	args *VmArgs,
 	ctx *pulumi.Context,
@@ -19,10 +37,13 @@ func CreateVm(
 		mappedPublicKeys = append(mappedPublicKeys, pulumi.String(key))
 	}
 
+	generalTimeout := pulumi.Int(600)
+
 	return vm.NewVirtualMachine(ctx, args.Name, &vm.VirtualMachineArgs{
 		NodeName: pulumi.String(args.NodeName),
 		Name:     pulumi.String(args.Name),
 		VmId:     pulumi.Int(args.Id),
+		PoolId:   pulumi.String("VMs"),
 
 		Agent: &vm.VirtualMachineAgentArgs{
 			Enabled: pulumi.Bool(true),
@@ -95,15 +116,32 @@ func CreateVm(
 			VmId:     pulumi.Int(int(args.Template)),
 		},
 
-		OnBoot:  pulumi.Bool(true),
-		Started: pulumi.Bool(true),
-	}, pulumi.Provider(provider))
+		OnBoot:            pulumi.Bool(true),
+		Started:           pulumi.Bool(true),
+		TimeoutClone:      generalTimeout,
+		TimeoutCreate:     generalTimeout,
+		TimeoutShutdownVm: generalTimeout,
+		TimeoutStartVm:    generalTimeout,
+		TimeoutStopVm:     generalTimeout,
+		TimeoutMigrate:    generalTimeout,
+		TimeoutMoveDisk:   generalTimeout,
+		TimeoutReboot:     generalTimeout,
+	}, pulumi.Provider(provider), pulumi.IgnoreChanges([]string{
+		"disks[0].speed",
+		"disks[0].fileFormat",
+		"disks[0].pathInDatastore",
+		"disks[0].ssd",
+		"cdrom",
+		"efiDisk",
+		"startup.downDelay",
+		"startup.upDelay",
+	}))
 }
 
-type Templates int
+type VmTemplates int
 
 const (
-	DEBIAN_12 Templates = 1000
+	VM_DEBIAN_12 VmTemplates = 1000
 )
 
 type VmUser struct {
@@ -119,7 +157,7 @@ type VmArgs struct {
 	Cores    int
 	Memory   common.MinMax
 	Storage  int
-	Template Templates
+	Template VmTemplates
 	Network  common.Network
 	User     VmUser
 	Usb      *vm.VirtualMachineUsbArray
