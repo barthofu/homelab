@@ -21,6 +21,8 @@ func CreateContainer(
 
 	return ct.NewContainer(ctx, args.Name, &ct.ContainerArgs{
 		NodeName: pulumi.String(args.NodeName),
+		VmId:     pulumi.Int(args.Id),
+		PoolId:   pulumi.String("CTs"),
 
 		Initialization: &ct.ContainerInitializationArgs{
 			Hostname: pulumi.String(args.Name),
@@ -40,7 +42,7 @@ func CreateContainer(
 
 		OperatingSystem: &ct.ContainerOperatingSystemArgs{
 			TemplateFileId: pulumi.String(args.Template),
-			Type:           pulumi.String("l26"),
+			Type:           pulumi.String(args.OsType),
 		},
 
 		Cpu: &ct.ContainerCpuArgs{
@@ -57,6 +59,7 @@ func CreateContainer(
 
 		NetworkInterfaces: &ct.ContainerNetworkInterfaceArray{
 			ct.ContainerNetworkInterfaceArgs{
+				Name:     pulumi.String("eth0"),
 				Bridge:   pulumi.String("vmbr0"),
 				Firewall: pulumi.Bool(false),
 			},
@@ -67,13 +70,21 @@ func CreateContainer(
 			Nesting: pulumi.Bool(args.Nestable),
 		},
 		StartOnBoot: pulumi.Bool(true),
-	})
+	}, pulumi.Provider(provider))
 }
+
+type CtTemplates string
+
+const (
+	CT_ALPINE_3 CtTemplates = "local:vztmpl/alpine-3.18-default_20230607_amd64.tar.xz"
+)
 
 type ContainerArgs struct {
 	NodeName string
 	Name     string
-	Template string
+	Id       int
+	Template CtTemplates
+	OsType   string
 
 	Cores   int
 	Memory  int
