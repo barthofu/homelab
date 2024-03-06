@@ -2,6 +2,18 @@
 
 This repository holds the code and configuration for my homelab.
 
+## Table of contents
+
+- [Table of contents](#table-of-contents)
+- [Why a homelab?](#why-a-homelab)
+- [Philosophy and design goals](#philosophy-and-design-goals)
+- [Features](#features)
+  - [Bonus](#bonus)
+- [Hardware](#hardware)
+- [Services](#services)
+- [Tooling](#tooling)
+
+
 ## Why a homelab?
 
 My fascination with IT has driven me to establish my own home lab. While I've been utilizing various VPS services, I yearned for greater control over my infrastructure, along with the opportunity to delve into domains I had previously overlooked (*gazing at you, Network shit*).
