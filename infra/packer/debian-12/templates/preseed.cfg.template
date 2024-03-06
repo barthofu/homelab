@@ -118,6 +118,7 @@ d-i preseed/late_command string \
   in-target sed -i 's/^#?PasswordAuthentication .*/PasswordAuthentication yes/' /etc/ssh/sshd_config;
 %{ else ~}
 d-i preseed/late_command string \
+  in-target /bin/sh -c 'echo "datasource_list: [ NoCloud, None ]" > /etc/cloud/cloud.cfg.d/01_ds-identify.cfg'; \
   in-target /bin/sh -c 'echo "${ username } ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${ username }'; \
   in-target usermod -aG sudo ${ username }; \
   in-target usermod -aG adm ${ username }; \

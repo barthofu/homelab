@@ -24,8 +24,7 @@ func main() {
 		// Create a new ProxmoxVE provider
 		provider, err := proxmoxve.NewProvider(ctx, "proxmox", &proxmoxve.ProviderArgs{
 			Endpoint: pulumi.String(os.Getenv("PROXMOX_API_URL")),
-			Username: pulumi.String(os.Getenv("PROXMOX_USERNAME")),
-			Password: pulumi.String(os.Getenv("PROXMOX_PASSWORD")),
+			ApiToken: pulumi.String(os.Getenv("PROXMOX_API_TOKEN")),
 			Insecure: pulumi.Bool(true),
 		})
 		if err != nil {
@@ -34,9 +33,12 @@ func main() {
 
 		// common variables
 		user := modules.VmUser{
-			Username:   "bartho",
-			Password:   os.Getenv("VM_PASSWORD"),
-			PublicKeys: []string{},
+			Username: "bartho",
+			Password: os.Getenv("USER_PASSWORD"),
+			PublicKeys: []string{
+				os.Getenv("BARTHO_PUBLIC_KEY"),
+				os.Getenv("ANSIBLE_PUBLIC_KEY"),
+			},
 		}
 		ipv4Gateway := "192.168.1.254"
 
@@ -170,27 +172,6 @@ func main() {
 			ctx,
 			provider,
 		)
-
-		// lxc containers
-		modules.CreateContainer(&modules.ContainerArgs{
-			NodeName: "homelab",
-			Name:     "tailscale",
-			Id:       150,
-			Template: modules.CT_ALPINE_3,
-			OsType:   "alpine",
-			Cores:    1,
-			Memory:   1,
-			Storage:  8,
-			Network: common.Network{
-				Ipv4: common.Ip{Adress: "192.168.1.150/24", Gateway: ipv4Gateway},
-			},
-			Password: os.Getenv("VM_PASSWORD"),
-			PublicKeys: []string{
-				os.Getenv("PUBLIC_KEY"),
-			},
-			Nestable:     false,
-			Unprivileged: true,
-		}, ctx, provider)
 
 		return nil
 	})

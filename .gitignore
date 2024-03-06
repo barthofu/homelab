@@ -5,6 +5,7 @@ tmp/
 *.key
 *.pem
 .env*
+secrets/
 
 # ide
 .vscode/
