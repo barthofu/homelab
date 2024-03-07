@@ -1,0 +1,5 @@
+- name: Install OpenMediaVault
+  hosts: nas
+  become: true
+  roles:
+    - ../roles/openmediavault

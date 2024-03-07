@@ -24,7 +24,8 @@ func main() {
 		// Create a new ProxmoxVE provider
 		provider, err := proxmoxve.NewProvider(ctx, "proxmox", &proxmoxve.ProviderArgs{
 			Endpoint: pulumi.String(os.Getenv("PROXMOX_API_URL")),
-			ApiToken: pulumi.String(os.Getenv("PROXMOX_API_TOKEN")),
+			Username: pulumi.String(os.Getenv("PROXMOX_USERNAME")),
+			Password: pulumi.String(os.Getenv("PROXMOX_PASSWORD")),
 			Insecure: pulumi.Bool(true),
 		})
 		if err != nil {

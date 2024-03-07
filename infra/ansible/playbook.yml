@@ -1,1 +1,1 @@
-- import_playbook: example.yml
+- import_playbook: playbooks/nas.yml

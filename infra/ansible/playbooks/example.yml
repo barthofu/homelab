@@ -1,5 +1,0 @@
-- hosts: lab
-  tasks:
-    - name: "Create was_here file"
-      ansible.builtin.shell: |
-        touch was_here
