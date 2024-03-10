@@ -1,0 +1,17 @@
+KEYMAPOPTS="fr fr-us"
+HOSTNAMEOPTS="-n alpine"
+INTERFACESOPTS="auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+"
+%{ if length(dns_servers) > 0 ~}
+DNSOPTS="-n ${join(" ", dns_servers)}"
+%{ endif ~}
+TIMEZONEOPTS="-z Europe/Paris"
+PROXYOPTS="none"
+APKREPOSOPTS="-1 -c"
+SSHDOPTS="-c openssh"
+NTPOPTS="-c chrony"
+DISKOPTS="-m sys /dev/vda"

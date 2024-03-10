@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -ex
+
+rc-service sshd stop
+
+# Update apk repositories
+sed -r -i '\|/v[0-9]+\.[0-9]+/community|s|^#\s?||g' /etc/apk/repositories
+apk update
+
+# Add qemu-guest-agent
+apk add qemu-guest-agent sudo
+echo -e GA_PATH="/dev/vport2p1" >> /etc/conf.d/qemu-guest-agent
+rc-update add qemu-guest-agent
+rc-service qemu-guest-agent restart
+
+# create user
+adduser -D -G wheel -u 1000 ${ username }
+echo "${ username } ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${ username } && chmod 0440 /etc/sudoers.d/${ username }
+PW="${ password }" && echo -e "$PW\n$PW" | passwd ${ username } && unset PW # src: https://gist.github.com/kennwhite/54af16fa003fa3ec69c471ef9bb26b1b
+chmod o-rx /home/${ username } # remove read and execute permissions for other users
+
+# Update ssh configuration
+sed -r -i "s/^#?PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+sed -r -i "s/^#?PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+sed -r -i "s/^#?PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+
+rc-service sshd restart
+
+rm ~/.ash_history
