@@ -24,6 +24,12 @@ variable "http_server_port" {
     description = "The port to bind the HTTP server to"
 }
 
+variable "root_password" {
+    type = string
+    sensitive = true
+    description = "The root password to use for SSH connections"
+}
+
 variable "username" {
     type = string
     description = "The username to use for SSH connections"
@@ -35,31 +41,7 @@ variable "password" {
     description = "The password to use for SSH connections"
 }
 
-variable "root_password" {
-    type = string
-    sensitive = true
-    description = "The root password to use for SSH connections"
-}
-
 variable "ssh_public_key" {
     type = string
     description = "The SSH key to use for SSH connections"
-}
-
-variable "iso_url" {
-  type        = string
-  description = "URL to an ISO file to upload to Proxmox, and then boot from."
-  default     = "https:///debian-cd/current/amd64/iso-cd/debian-12.5.0-amd64-netinst.iso"
-}
-
-variable "iso_file" {
-  type        = string
-  description = "Filename of the ISO file to boot from."
-  default     = null
-}
-
-variable "iso_checksum" {
-  type        = string
-  description = "Checksum of the ISO file."
-  default     = null
 }

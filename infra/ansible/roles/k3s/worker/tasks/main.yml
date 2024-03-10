@@ -1,0 +1,35 @@
+# Steps are reproduced from the official installation guide: https://docs.openmediavault.org/en/7.0/installation/on_debian.html
+
+- name: Install GNUPG
+  apt:
+    name: gnupg
+    state: latest
+
+- name: Download OMV archive key
+  ansible.builtin.shell: |
+    wget --quiet --output-document=- https://packages.openmediavault.org/public/archive.key | gpg --dearmor --yes --output "/usr/share/keyrings/openmediavault-archive-keyring.gpg"
+
+- name: Create OMV apt source list
+  template: 
+    src: "openmediavault.list"
+    dest: /etc/apt/sources.list.d/openmediavault.list
+    owner: root
+    group: root
+    mode: u=rw,g=rw,o=r
+
+- name: Install openmediavault package
+  ansible.builtin.apt:
+    name: 
+      - openmediavault
+      - openmediavault-keyring
+    update_cache: yes
+    state: latest
+    install_recommends: no
+    allow_downgrade: yes
+    allow_change_held_packages: yes
+    autoremove: yes
+
+- name: Populate the configuration database
+  ansible.builtin.shell: |
+    omv-confdbadm populate
+  when: omv_first_install
