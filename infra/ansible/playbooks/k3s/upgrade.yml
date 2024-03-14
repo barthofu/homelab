@@ -1,0 +1,16 @@
+---
+
+# Servers should be restarted sequientally to avoid etcd learner issues
+# Agents have no such limitation
+- name: Upgrade K3s Servers
+  hosts: k3s-servers
+  become: true
+  serial: 1
+  roles:
+    - ../../roles/k3s/upgrade
+
+- name: Upgrade K3s Agents
+  hosts: k3s-agents
+  become: true
+  roles:
+    - ../../roles/k3s/upgrade

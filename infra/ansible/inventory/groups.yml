@@ -1,12 +1,20 @@
 all:
   children:
-    k3s-masters:
+    vms:
       hosts:
-        master-1:
-        master-2:
-        master-3:
-    k3s-workers:
-      hosts:
-        services-1:
-        services-2:
-        services-3:
+        nas:
+        lab:
+        coder:
+      children:
+        k3s-cluster:
+          children:
+            k3s-servers:
+              hosts:
+                k3s-server-1:
+                k3s-server-2:
+                k3s-server-3:
+            k3s-agents:
+              hosts:
+                k3s-agent-1:
+                k3s-agent-2:
+                k3s-agent-3:

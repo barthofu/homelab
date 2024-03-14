@@ -1,0 +1,20 @@
+- name: Cluster prep
+  hosts: k3s-cluster
+  gather_facts: true
+  become: true
+  roles:
+    - ../../roles/k3s/prereq
+    - ../../roles/k3s/airgap
+    - ../../roles/k3s/raspberrypi
+
+- name: Setup K3S server
+  hosts: k3s-servers
+  become: true
+  roles:
+    - ../../roles/k3s/server
+
+- name: Setup K3S agent
+  hosts: k3s-agents
+  become: true
+  roles:
+    - ../../roles/k3s/agent
