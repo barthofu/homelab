@@ -1,0 +1,15 @@
+---
+- name: Install longhorn dependencies
+  when: ansible_distribution in ['Ubuntu', 'Debian']
+  ansible.builtin.apt:
+    name: 
+      - open-iscsi 
+      - nfs-common
+    update_cache: true
+
+- name: Check if iscsi is running
+  when: ansible_distribution in ['Ubuntu', 'Debian']
+  ansible.builtin.systemd:
+    name: iscsid
+    state: started
+    enabled: true

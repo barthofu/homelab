@@ -18,3 +18,9 @@
   become: true
   roles:
     - ../../roles/k3s/agent
+    
+- name: Install Longhorn prerequisites
+  hosts: k3s-cluster
+  become: true
+  roles:
+    - ../../roles/k3s/longhorn

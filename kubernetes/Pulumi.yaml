@@ -1,0 +1,7 @@
+name: kubernetes
+runtime: nodejs
+description: Services and apps deployment on my k3s cluster
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript

@@ -1,7 +1,0 @@
-name: k3s
-runtime: go
-description: K3S cluster
-config:
-  pulumi:tags:
-    value:
-      pulumi:template: go
